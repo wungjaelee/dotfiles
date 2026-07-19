@@ -154,4 +154,4 @@ link_agent_file "$DOTFILES_DIR/agents/AGENTS.md" "$HOME/.claude/CLAUDE.md"  # Cl
 link_agent_file "$DOTFILES_DIR/agents/AGENTS.md" "$HOME/.codex/AGENTS.md"   # Codex
 
 echo ""
-echo "Done. Open a new shell for changes to take effect."
+echo "Done. Run source ~/.zshrc for changes to take effect."
