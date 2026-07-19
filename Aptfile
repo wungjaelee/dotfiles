@@ -1,0 +1,9 @@
+stow
+tmux
+git
+fzf
+ripgrep
+fd-find
+jq
+zsh-autosuggestions
+zsh-syntax-highlighting

@@ -1,10 +1,10 @@
 #!/bin/bash
-# NOTE: This script is written and tested for macOS only.
-# Behavior on Linux or Windows (WSL) has not been verified — proceed with caution.
+# Tested on macOS and Debian Linux. Other platforms have not been verified — proceed with caution.
 
 set -e
 
 DOTFILES_DIR="$(cd "$(dirname "$0")" && pwd)"
+OS="$(uname -s)"
 
 # ── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -31,12 +31,11 @@ echo ""
 echo "dotfiles installer"
 echo "────────────────────────────────────────"
 echo "This script will:"
-echo "  1. Install Homebrew (if not already installed)"
-echo "  2. Install GNU Stow via Homebrew (if not already installed)"
-echo "  3. Install all packages listed in Brewfile"
-echo "  4. Symlink $DOTFILES_DIR to ~/.dotfiles"
-echo "  5. Symlink dotfiles from $DOTFILES_DIR to $HOME"
-echo "  6. Symlink agents/AGENTS.md to agent-specific locations to serve as global memory"
+echo "  1. Install packages (Homebrew + Brewfile on macOS, apt + Aptfile on Linux)"
+echo "  2. Install starship and gh (Linux only, not in apt)"
+echo "  3. Symlink $DOTFILES_DIR to ~/.dotfiles"
+echo "  4. Symlink dotfiles from $DOTFILES_DIR to $HOME"
+echo "  5. Symlink agents/AGENTS.md to agent-specific locations"
 echo ""
 echo "Existing dotfiles that conflict with symlinks will cause stow to abort."
 echo "Back up or remove them before proceeding."
@@ -45,34 +44,77 @@ echo ""
 confirm "Proceed?" || { echo "Aborted."; exit 0; }
 echo ""
 
-# ── Homebrew ──────────────────────────────────────────────────────────────────
+# ── Packages ──────────────────────────────────────────────────────────────────
 
-if ! command -v brew &>/dev/null; then
-  print_step "Installing Homebrew..."
-  /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-
-  # Add brew to PATH for Apple Silicon Macs
-  if [[ -f "/opt/homebrew/bin/brew" ]]; then
-    eval "$(/opt/homebrew/bin/brew shellenv)"
+if [[ "$OS" == "Darwin" ]]; then
+  if ! command -v brew &>/dev/null; then
+    print_step "Installing Homebrew..."
+    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+    if [[ -f "/opt/homebrew/bin/brew" ]]; then
+      eval "$(/opt/homebrew/bin/brew shellenv)"
+    fi
+  else
+    print_step "Homebrew already installed, skipping."
   fi
-else
-  print_step "Homebrew already installed, skipping."
-fi
 
-# ── Brewfile ──────────────────────────────────────────────────────────────────
+  if [[ -f "$DOTFILES_DIR/Brewfile" ]]; then
+    print_step "Installing packages from Brewfile..."
+    brew bundle --file "$DOTFILES_DIR/Brewfile"
+  fi
 
-if [[ -f "$DOTFILES_DIR/Brewfile" ]]; then
-  print_step "Installing packages from Brewfile..."
-  brew bundle --file "$DOTFILES_DIR/Brewfile"
-else
-  print_step "No Brewfile found, skipping package installation."
+elif [[ "$OS" == "Linux" ]]; then
+  print_step "Installing packages from Aptfile..."
+  sudo apt-get update -qq
+  sudo apt-get install -y $(grep -v '^\s*#' "$DOTFILES_DIR/Aptfile" | tr '\n' ' ')
+
+  # gh — not in apt, install via official script
+  if ! command -v gh &>/dev/null; then
+    print_step "Installing gh..."
+    curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg
+    echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list
+    sudo apt-get update -qq && sudo apt-get install -y gh
+  else
+    print_step "gh already installed, skipping."
+  fi
+
+  # starship — not in apt, install via official script
+  if ! command -v starship &>/dev/null; then
+    print_step "Installing starship..."
+    curl -sS https://starship.rs/install.sh | sh -s -- --yes
+  else
+    print_step "starship already installed, skipping."
+  fi
+
+  # herdr — not in apt, install via official script
+  if ! command -v herdr &>/dev/null; then
+    print_step "Installing herdr..."
+    curl -fsSL https://herdr.dev/install.sh | sh
+  else
+    print_step "herdr already installed, skipping."
+  fi
+
+  # neovim — apt ships old versions, use latest stable binary from GitHub
+  if ! command -v nvim &>/dev/null; then
+    print_step "Installing neovim..."
+    curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim-linux-x86_64.tar.gz
+    tar xzf nvim-linux-x86_64.tar.gz
+    sudo mv nvim-linux-x86_64 /opt/nvim
+    sudo ln -s /opt/nvim/bin/nvim /usr/local/bin/nvim
+    rm nvim-linux-x86_64.tar.gz
+  else
+    print_step "neovim already installed, skipping."
+  fi
 fi
 
 # ── Stow ──────────────────────────────────────────────────────────────────────
 
 if ! command -v stow &>/dev/null; then
   print_step "Installing GNU Stow..."
-  brew install stow
+  if [[ "$OS" == "Darwin" ]]; then
+    brew install stow
+  else
+    sudo apt-get install -y stow
+  fi
 else
   print_step "Stow already installed, skipping."
 fi
@@ -87,7 +129,6 @@ ln -sfn "$DOTFILES_DIR" "$HOME/.dotfiles"
 print_step "Symlinking dotfiles..."
 cd "$DOTFILES_DIR"
 
-# Stow each top-level directory (skipping hidden dirs and non-directories)
 for pkg in */; do
   pkg="${pkg%/}"
   print_step "  stow: $pkg"

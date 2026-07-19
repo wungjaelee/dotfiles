@@ -1,10 +1,17 @@
 # If this file gets too long, consider splitting sections into ~/.zsh/*.zsh and sourcing them here.
 
 # plugins
-source "$(brew --prefix)/share/zsh-autosuggestions/zsh-autosuggestions.zsh"
-source "$(brew --prefix)/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
-source "$(brew --prefix)/opt/fzf/shell/key-bindings.zsh"
-source "$(brew --prefix)/opt/fzf/shell/completion.zsh"
+if [[ "$(uname -s)" == "Darwin" ]]; then
+  source "$(brew --prefix)/share/zsh-autosuggestions/zsh-autosuggestions.zsh"
+  source "$(brew --prefix)/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
+  source "$(brew --prefix)/opt/fzf/shell/key-bindings.zsh"
+  source "$(brew --prefix)/opt/fzf/shell/completion.zsh"
+else
+  source "/usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh"
+  source "/usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
+  source "/usr/share/doc/fzf/examples/key-bindings.zsh"
+  source "/usr/share/doc/fzf/examples/completion.zsh"
+fi
 eval "$(starship init zsh)"
 
 # keybindings
@@ -21,7 +28,7 @@ alias vim="nvim"
 obs() {
   local dest=$HOME/Documents/Obsidian/$(basename "$1")
   cp "$1" $dest
-  open -a Obsidian "$dest"
+  [[ "$(uname -s)" == "Darwin" ]] && open -a Obsidian "$dest"
 }
 
 # machine-local overrides
