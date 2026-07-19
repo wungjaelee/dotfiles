@@ -2,6 +2,7 @@
 brew "stow"
 
 # Terminal multiplexer
+brew "herdr"
 brew "tmux"
 
 # Editor
