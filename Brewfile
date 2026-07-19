@@ -18,6 +18,9 @@ brew "starship"
 brew "zsh-autosuggestions"
 brew "zsh-syntax-highlighting"
 
+# Fonts
+cask "font-hack-nerd-font"
+
 # Essential CLI tools
 brew "fzf"        # fuzzy finder — Ctrl+R history, Ctrl+T file picker
 brew "ripgrep"    # fast file content search: rg "pattern"
