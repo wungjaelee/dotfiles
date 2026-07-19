@@ -18,6 +18,9 @@ brew "starship"
 brew "zsh-autosuggestions"
 brew "zsh-syntax-highlighting"
 
+# Terminal
+cask "wezterm"
+
 # Fonts
 cask "font-hack-nerd-font"
 
