@@ -24,7 +24,8 @@ echo "This script will:"
 echo "  1. Install Homebrew (if not already installed)"
 echo "  2. Install GNU Stow via Homebrew (if not already installed)"
 echo "  3. Install all packages listed in Brewfile"
-echo "  4. Symlink dotfiles from $DOTFILES_DIR to $HOME"
+echo "  4. Symlink $DOTFILES_DIR to ~/.dotfiles"
+echo "  5. Symlink dotfiles from $DOTFILES_DIR to $HOME"
 echo ""
 echo "Existing dotfiles that conflict with symlinks will cause stow to abort."
 echo "Back up or remove them before proceeding."
@@ -64,6 +65,11 @@ if ! command -v stow &>/dev/null; then
 else
   print_step "Stow already installed, skipping."
 fi
+
+# ── Symlink repo to ~/.dotfiles ───────────────────────────────────────────────
+
+print_step "Symlinking $DOTFILES_DIR to ~/.dotfiles..."
+ln -sfn "$DOTFILES_DIR" "$HOME/.dotfiles"
 
 # ── Symlink dotfiles ──────────────────────────────────────────────────────────
 
