@@ -131,6 +131,7 @@ cd "$DOTFILES_DIR"
 
 for pkg in */; do
   pkg="${pkg%/}"
+  [[ "$pkg" == "agents" ]] && continue
   print_step "  stow: $pkg"
   stow -t "$HOME" "$pkg"
 done
