@@ -139,11 +139,10 @@ cd "$DOTFILES_DIR"
 for pkg in */; do
   pkg="${pkg%/}"
   [[ "$pkg" == "agents" ]] && continue
-  if stow -t "$HOME" "$pkg" 2>/dev/null; then
-    print_step "  stow: $pkg"
-  else
-    print_warn "skipping $pkg - conflicts with existing files. Back them up and re-run."
-  fi
+  stow_output=$(stow -t "$HOME" "$pkg" 2>&1) && print_step "  stow: $pkg" || {
+    print_warn "skipping $pkg - conflicts with existing files:"
+    echo "$stow_output" | sed 's/^/      /'
+  }
 done
 
 # ── Agent memory ──────────────────────────────────────────────────────────────
