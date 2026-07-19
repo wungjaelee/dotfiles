@@ -26,6 +26,7 @@ echo "  2. Install GNU Stow via Homebrew (if not already installed)"
 echo "  3. Install all packages listed in Brewfile"
 echo "  4. Symlink $DOTFILES_DIR to ~/.dotfiles"
 echo "  5. Symlink dotfiles from $DOTFILES_DIR to $HOME"
+echo "  6. Symlink agents/AGENTS.md to agent-specific locations to serve as global memory"
 echo ""
 echo "Existing dotfiles that conflict with symlinks will cause stow to abort."
 echo "Back up or remove them before proceeding."
@@ -82,6 +83,14 @@ for pkg in */; do
   print_step "  stow: $pkg"
   stow -t "$HOME" "$pkg"
 done
+
+# ── Agent memory ──────────────────────────────────────────────────────────────
+
+print_step "Symlinking agent memory files..."
+mkdir -p "$HOME/.claude"
+mkdir -p "$HOME/.codex"
+ln -sfn "$DOTFILES_DIR/agents/AGENTS.md" "$HOME/.claude/CLAUDE.md"  # Claude Code
+ln -sfn "$DOTFILES_DIR/agents/AGENTS.md" "$HOME/.codex/AGENTS.md"   # Codex
 
 echo ""
 echo "Done. Open a new shell for changes to take effect."
