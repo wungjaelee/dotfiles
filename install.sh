@@ -6,9 +6,17 @@ set -e
 DOTFILES_DIR="$(cd "$(dirname "$0")" && pwd)"
 OS="$(uname -s)"
 
+# ── Colors ────────────────────────────────────────────────────────────────────
+
+RED='\033[0;31m'
+YELLOW='\033[0;33m'
+NC='\033[0m' # no color
+
 # ── Helpers ──────────────────────────────────────────────────────────────────
 
 print_step() { echo "  → $1"; }
+print_warn()  { echo -e "  ${YELLOW}⚠ $1${NC}"; }
+print_error() { echo -e "  ${RED}✖ $1${NC}"; }
 
 confirm() {
   read -r -p "$1 [y/N] " response
@@ -19,7 +27,7 @@ link_agent_file() {
   local src="$1"
   local dest="$2"
   if [[ -f "$dest" && ! -L "$dest" ]]; then
-    print_step "  skipping $dest — real file exists, back it up and re-run."
+    print_warn "skipping $dest - real file exists, back it up and re-run."
     return
   fi
   ln -sfn "$src" "$dest"
@@ -37,8 +45,7 @@ echo "  3. Symlink $DOTFILES_DIR to ~/.dotfiles"
 echo "  4. Symlink dotfiles from $DOTFILES_DIR to $HOME"
 echo "  5. Symlink agents/AGENTS.md to agent-specific locations"
 echo ""
-echo "Existing dotfiles that conflict with symlinks will cause stow to abort."
-echo "Back up or remove them before proceeding."
+echo "Conflicting dotfiles will be skipped with a warning — they won't block the rest."
 echo ""
 
 confirm "Proceed?" || { echo "Aborted."; exit 0; }
@@ -132,8 +139,11 @@ cd "$DOTFILES_DIR"
 for pkg in */; do
   pkg="${pkg%/}"
   [[ "$pkg" == "agents" ]] && continue
-  print_step "  stow: $pkg"
-  stow -t "$HOME" "$pkg"
+  if stow -t "$HOME" "$pkg" 2>/dev/null; then
+    print_step "  stow: $pkg"
+  else
+    print_warn "skipping $pkg - conflicts with existing files. Back them up and re-run."
+  fi
 done
 
 # ── Agent memory ──────────────────────────────────────────────────────────────
