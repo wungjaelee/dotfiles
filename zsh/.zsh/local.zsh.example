@@ -1,0 +1,15 @@
+# Machine-local overrides — copy this to ~/.zsh/local.zsh and customize.
+# ~/.zsh/local.zsh is gitignored and never committed.
+
+# Example: machine-specific aliases
+# alias claude="afix agent run claude"
+
+# Example: work-specific environment variables
+# export WORK_API_KEY="..."
+# export DOCKER_HOST="..."
+
+# Example: machine-specific PATH additions
+# export PATH="$HOME/work/bin:$PATH"
+
+# Example: machine-specific tool config
+# export AWS_PROFILE="work"
