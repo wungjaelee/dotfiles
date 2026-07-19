@@ -1,1 +1,7 @@
 .zsh/local.zsh
+
+# herdr runtime files
+herdr/.config/herdr/herdr.log
+herdr/.config/herdr/herdr-client.log
+herdr/.config/herdr/herdr-server.log
+herdr/.config/herdr/session.json
