@@ -15,6 +15,16 @@ confirm() {
   [[ "$response" =~ ^[Yy]$ ]]
 }
 
+link_agent_file() {
+  local src="$1"
+  local dest="$2"
+  if [[ -f "$dest" && ! -L "$dest" ]]; then
+    print_step "  skipping $dest — real file exists, back it up and re-run."
+    return
+  fi
+  ln -sfn "$src" "$dest"
+}
+
 # ── Intro ─────────────────────────────────────────────────────────────────────
 
 echo ""
@@ -89,8 +99,8 @@ done
 print_step "Symlinking agent memory files..."
 mkdir -p "$HOME/.claude"
 mkdir -p "$HOME/.codex"
-ln -sfn "$DOTFILES_DIR/agents/AGENTS.md" "$HOME/.claude/CLAUDE.md"  # Claude Code
-ln -sfn "$DOTFILES_DIR/agents/AGENTS.md" "$HOME/.codex/AGENTS.md"   # Codex
+link_agent_file "$DOTFILES_DIR/agents/AGENTS.md" "$HOME/.claude/CLAUDE.md"  # Claude Code
+link_agent_file "$DOTFILES_DIR/agents/AGENTS.md" "$HOME/.codex/AGENTS.md"   # Codex
 
 echo ""
 echo "Done. Open a new shell for changes to take effect."
