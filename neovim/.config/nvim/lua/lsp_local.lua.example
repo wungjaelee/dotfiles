@@ -1,0 +1,22 @@
+-- Machine-local LSP config — copy this to lsp_local.lua and customize.
+-- lsp_local.lua is gitignored and never committed.
+
+-- Example: Uber's managed gopls, wired through ulsp-daemon's wrapper scripts
+-- (see the ulsp-daemon README for what these do and how to launch the daemon;
+-- without it running, they fall back to plain gopls / a non-ulsp driver).
+-- vim.lsp.config('gopls', {
+--   cmd = { '/home/user/go-code/tools/ide/managed_gopls.sh', '-mode=stdio' },
+--   cmd_env = { GO111MODULE = 'off' },
+--   settings = {
+--     gopls = {
+--       env = {
+--         GOPACKAGESDRIVER = '/home/user/go-code/tools/ide/managed_gopadrv.sh',
+--       },
+--     },
+--   },
+--   root_dir = '/home/user/go-code',
+-- })
+-- vim.lsp.enable('gopls')
+
+-- Example: a plain LSP server with no machine-specific wiring
+-- vim.lsp.enable('lua_ls')

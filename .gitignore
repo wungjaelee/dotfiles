@@ -1,4 +1,5 @@
 .zsh/local.zsh
+lsp_local.lua
 
 # herdr runtime files
 herdr/.config/herdr/herdr.log
