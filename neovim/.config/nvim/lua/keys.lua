@@ -7,6 +7,7 @@ vim.keymap.set('n', '<C-l>', '<C-w>l', { desc = 'Move to right pane' })
 -- splits
 vim.keymap.set('n', '<leader>v', '<cmd>vsplit<cr><C-w>l', { desc = 'Vertical split' })
 vim.keymap.set('n', '<leader>x', '<cmd>split<cr><C-w>j', { desc = 'Horizontal split' })
+vim.keymap.set('n', '<leader>q', '<cmd>q<cr>', { desc = 'Close pane' })
 
 -- exit terminal mode
 vim.keymap.set('t', '<Esc>', '<C-\\><C-n>', { desc = 'Exit terminal mode' })
