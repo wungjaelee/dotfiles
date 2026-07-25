@@ -4,6 +4,10 @@ vim.keymap.set('n', '<C-j>', '<C-w>j', { desc = 'Move to below pane' })
 vim.keymap.set('n', '<C-k>', '<C-w>k', { desc = 'Move to above pane' })
 vim.keymap.set('n', '<C-l>', '<C-w>l', { desc = 'Move to right pane' })
 
+-- splits
+vim.keymap.set('n', '<leader>v', '<cmd>vsplit<cr><C-w>l', { desc = 'Vertical split' })
+vim.keymap.set('n', '<leader>x', '<cmd>split<cr><C-w>j', { desc = 'Horizontal split' })
+
 -- exit terminal mode
 vim.keymap.set('t', '<Esc>', '<C-\\><C-n>', { desc = 'Exit terminal mode' })
 
