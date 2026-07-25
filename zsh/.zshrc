@@ -31,5 +31,7 @@ obs() {
   [[ "$(uname -s)" == "Darwin" ]] && open -a Obsidian "$dest"
 }
 
+eval "$(zoxide init zsh)"
+
 # machine-local overrides
 [[ -f ~/.zsh/local.zsh ]] && source ~/.zsh/local.zsh
