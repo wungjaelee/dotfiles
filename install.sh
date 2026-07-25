@@ -165,5 +165,13 @@ mkdir -p "$HOME/.codex"
 link_agent_file "$DOTFILES_DIR/agents/AGENTS.md" "$HOME/.claude/CLAUDE.md"  # Claude Code
 link_agent_file "$DOTFILES_DIR/agents/AGENTS.md" "$HOME/.codex/AGENTS.md"   # Codex
 
+# Repo-level agent instructions — CLAUDE.md is a relative symlink to AGENTS.md
+if [[ ! -e "$DOTFILES_DIR/CLAUDE.md" ]]; then
+  print_step "Symlinking CLAUDE.md to AGENTS.md in dotfiles repo..."
+  ln -s AGENTS.md "$DOTFILES_DIR/CLAUDE.md"
+else
+  print_step "CLAUDE.md already exists, skipping."
+fi
+
 echo ""
 echo "Done. Run source ~/.zshrc for changes to take effect."
