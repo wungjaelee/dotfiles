@@ -33,3 +33,8 @@ brew "fzf"        # fuzzy finder — Ctrl+R history, Ctrl+T file picker
 brew "ripgrep"    # fast file content search: rg "pattern"
 brew "fd"         # fast file finder: fd "*.ts"
 brew "jq"         # JSON query/transform: curl ... | jq '.field'
+brew "zoxide"     # smart cd
+brew "ffmpeg"     # yazi: video preview
+brew "sevenzip"   # yazi: archive preview
+brew "poppler"    # yazi: PDF preview
+brew "imagemagick" # yazi: image preview

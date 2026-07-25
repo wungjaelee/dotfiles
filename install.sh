@@ -100,6 +100,18 @@ elif [[ "$OS" == "Linux" ]]; then
     print_step "herdr already installed, skipping."
   fi
 
+  # yazi — not in apt, use latest binary from GitHub
+  if ! command -v yazi &>/dev/null; then
+    print_step "Installing yazi..."
+    curl -LO https://github.com/sxyazi/yazi/releases/latest/download/yazi-x86_64-unknown-linux-gnu.zip
+    unzip yazi-x86_64-unknown-linux-gnu.zip
+    sudo mv yazi-x86_64-unknown-linux-gnu/yazi /usr/local/bin/yazi
+    sudo mv yazi-x86_64-unknown-linux-gnu/ya /usr/local/bin/ya
+    rm -rf yazi-x86_64-unknown-linux-gnu yazi-x86_64-unknown-linux-gnu.zip
+  else
+    print_step "yazi already installed, skipping."
+  fi
+
   # neovim — apt ships old versions, use latest stable binary from GitHub
   if ! command -v nvim &>/dev/null; then
     print_step "Installing neovim..."
