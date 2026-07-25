@@ -5,6 +5,7 @@ if not vim.uv.fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(lazypath)
 require('lazy').setup('plugins', {  -- load every file in lua/plugins/
+  rocks = { enabled = false },
   performance = {
     rtp = {
       -- uber-neovim ships compiled treesitter parsers (markdown, lua, ...) here

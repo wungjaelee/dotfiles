@@ -12,6 +12,10 @@ vim.keymap.set('n', '<leader>q', '<cmd>q<cr>', { desc = 'Close pane' })
 -- exit terminal mode
 vim.keymap.set('t', '<Esc>', '<C-\\><C-n>', { desc = 'Exit terminal mode' })
 
+-- comment toggle
+vim.keymap.set('n', '<leader>/', 'gcc', { desc = 'Toggle comment', remap = true })
+vim.keymap.set('v', '<leader>/', 'gc', { desc = 'Toggle comment', remap = true })
+
 -- save by pressing Escape
 vim.keymap.set('n', '<Esc>', ':w<CR>', { desc = 'Save' })
 -- pasting over a selection no longer clobbers your clipboard
