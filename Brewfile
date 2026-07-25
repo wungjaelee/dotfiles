@@ -25,6 +25,9 @@ cask "wezterm"
 # Fonts
 cask "font-hack-nerd-font"
 
+# File manager
+brew "yazi"
+
 # Essential CLI tools
 brew "fzf"        # fuzzy finder — Ctrl+R history, Ctrl+T file picker
 brew "ripgrep"    # fast file content search: rg "pattern"
