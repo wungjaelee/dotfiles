@@ -100,14 +100,16 @@ elif [[ "$OS" == "Linux" ]]; then
     print_step "herdr already installed, skipping."
   fi
 
-  # yazi — not in apt, use latest binary from GitHub
+  # yazi — not in apt, use latest binary from GitHub. musl build avoids
+  # GLIBC version mismatches on older distros (e.g. Debian stable's glibc
+  # trails the gnu build's requirement).
   if ! command -v yazi &>/dev/null; then
     print_step "Installing yazi..."
-    curl -LO https://github.com/sxyazi/yazi/releases/latest/download/yazi-x86_64-unknown-linux-gnu.zip
-    unzip yazi-x86_64-unknown-linux-gnu.zip
-    sudo mv yazi-x86_64-unknown-linux-gnu/yazi /usr/local/bin/yazi
-    sudo mv yazi-x86_64-unknown-linux-gnu/ya /usr/local/bin/ya
-    rm -rf yazi-x86_64-unknown-linux-gnu yazi-x86_64-unknown-linux-gnu.zip
+    curl -LO https://github.com/sxyazi/yazi/releases/latest/download/yazi-x86_64-unknown-linux-musl.zip
+    unzip yazi-x86_64-unknown-linux-musl.zip
+    sudo mv yazi-x86_64-unknown-linux-musl/yazi /usr/local/bin/yazi
+    sudo mv yazi-x86_64-unknown-linux-musl/ya /usr/local/bin/ya
+    rm -rf yazi-x86_64-unknown-linux-musl yazi-x86_64-unknown-linux-musl.zip
   else
     print_step "yazi already installed, skipping."
   fi
