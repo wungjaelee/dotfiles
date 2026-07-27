@@ -34,6 +34,7 @@ brew "ripgrep"    # fast file content search: rg "pattern"
 brew "fd"         # fast file finder: fd "*.ts"
 brew "jq"         # JSON query/transform: curl ... | jq '.field'
 brew "zoxide"     # smart cd
+brew "socat"      # neovim: ulsp-daemon TCP bridge (work only)
 brew "ffmpeg"     # yazi: video preview
 brew "sevenzip"   # yazi: archive preview
 brew "poppler"    # yazi: PDF preview

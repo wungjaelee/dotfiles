@@ -12,4 +12,5 @@ ffmpeg
 p7zip-full
 poppler-utils
 zoxide
+socat
 imagemagick

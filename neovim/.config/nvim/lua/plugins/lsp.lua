@@ -6,4 +6,9 @@ return {
       pcall(require, 'lsp_local')
     end,
   },
+  {
+    'j-hui/fidget.nvim',
+    event = 'LspAttach',
+    opts = {},  -- LSP progress spinners, useful with slow monorepo indexing
+  },
 }

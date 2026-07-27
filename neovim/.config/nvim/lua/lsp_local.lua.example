@@ -1,9 +1,24 @@
 -- Machine-local LSP config — copy this to lsp_local.lua and customize.
 -- lsp_local.lua is gitignored and never committed.
 
--- Example: Uber's managed gopls, wired through ulsp-daemon's wrapper scripts
--- (see the ulsp-daemon README for what these do and how to launch the daemon;
--- without it running, they fall back to plain gopls / a non-ulsp driver).
+-- Example: Uber's managed gopls + ulsp-daemon, wired through ulsp-daemon's wrapper
+-- scripts (see the ulsp-daemon README for what these do and how to launch the daemon;
+-- without it running, gopls falls back to a plain, non-ulsp driver, and the ulsp
+-- client below simply won't attach).
+
+-- Requires adding to ~/go-code/.envrc.local, so gopls uses the exact Go version Bazel
+-- builds with instead of the monorepo's wrapper (which breaks editor integration):
+--   if bazel_out=$(readlink bazel-out); then
+--       go_bin=${bazel_out%%/execroot*}/external/go_sdk/bin
+--       VIM_PATH="$go_bin:$PATH"
+--       export VIM_PATH
+--   else
+--       echo "Not setting up vim — bazel-out doesn't exist yet."
+--       echo "Run: bazel build @go_sdk//:go_sdk"
+--   fi
+--
+-- vim.env.PATH = vim.env.VIM_PATH or vim.env.PATH
+--
 -- vim.lsp.config('gopls', {
 --   cmd = { '/home/user/go-code/tools/ide/managed_gopls.sh', '-mode=stdio' },
 --   cmd_env = { GO111MODULE = 'off' },
@@ -11,12 +26,31 @@
 --     gopls = {
 --       env = {
 --         GOPACKAGESDRIVER = '/home/user/go-code/tools/ide/managed_gopadrv.sh',
+--         GOPACKAGESDRIVER_ULSP_MODE = '1',
 --       },
+--       staticcheck = true,
+--       gofumpt = true,
 --     },
 --   },
 --   root_dir = '/home/user/go-code',
 -- })
 -- vim.lsp.enable('gopls')
+--
+-- -- ulsp-daemon: format on save, BUILD file updates, Bazel auto-resolve, mock gen.
+-- -- Separate from gopls, which still handles completion/hover/diagnostics.
+-- -- Connects over TCP via socat (needs `socat` installed); daemon listens on 27883.
+-- vim.lsp.config('ulsp', {
+--   cmd = { 'socat', '-', 'tcp:localhost:27883,ignoreeof' },
+--   filetypes = { 'go', 'java' },
+--   root_dir = '/home/user/go-code',
+-- })
+-- vim.lsp.enable('ulsp')
+--
+-- -- monorepo-aware format on save (arc lint expects this, not plain gofumpt)
+-- vim.api.nvim_create_autocmd('BufWritePost', {
+--   pattern = '*.go',
+--   command = 'silent !~/go-code/tools/ide/formatter -w % | edit',
+-- })
 
 -- Example: a plain LSP server with no machine-specific wiring
 -- vim.lsp.enable('lua_ls')
