@@ -8,9 +8,20 @@ vim.keymap.set('n', '<C-l>', '<C-w>l', { desc = 'Move to right pane' })
 vim.keymap.set('n', '<leader>v', '<cmd>vsplit<cr><C-w>l', { desc = 'Vertical split' })
 vim.keymap.set('n', '<leader>x', '<cmd>split<cr><C-w>j', { desc = 'Horizontal split' })
 vim.keymap.set('n', '<leader>q', '<cmd>q<cr>', { desc = 'Close pane' })
+vim.keymap.set('n', '<leader>w', '<cmd>bd<cr>', { desc = 'Close buffer' })
 
 -- exit terminal mode
 vim.keymap.set('t', '<Esc>', '<C-\\><C-n>', { desc = 'Exit terminal mode' })
+
+-- q wipes a plain :term buffer once in normal mode, revealing whatever was open before
+vim.api.nvim_create_autocmd('TermOpen', {
+  callback = function(args)
+    if vim.bo[args.buf].filetype == 'snacks_terminal' then
+      return  -- snacks.nvim already manages its own close/hide keymap
+    end
+    vim.keymap.set('n', 'q', '<cmd>bd!<CR>', { buffer = args.buf, desc = 'Close terminal' })
+  end,
+})
 
 -- comment toggle
 vim.keymap.set('n', '<leader>/', 'gcc', { desc = 'Toggle comment', remap = true })

@@ -8,6 +8,35 @@ return {
     'lewis6991/gitsigns.nvim',
     event = 'BufWinEnter',
     opts = { current_line_blame = true },  -- who last touched this line
+    keys = {
+      {
+        '<leader>gp',
+        function()
+          local file = vim.fn.expand('%')
+          local line = vim.fn.line('.')
+          local blame = vim.fn.systemlist({ 'git', 'blame', '-L', line .. ',' .. line, '--porcelain', file })
+          if vim.v.shell_error ~= 0 then
+            vim.notify('Not a git-tracked file', vim.log.levels.ERROR)
+            return
+          end
+          local sha = blame[1]:match('^(%x+)')
+          if sha:match('^0+$') then
+            vim.notify('Line has no commit yet', vim.log.levels.WARN)
+            return
+          end
+          -- {owner}/{repo} are resolved by gh from the current repo's remote
+          local url = vim.fn.system({ 'gh', 'api', 'repos/{owner}/{repo}/commits/' .. sha .. '/pulls', '--jq', '.[0].html_url' })
+          url = vim.trim(url)
+          if vim.v.shell_error ~= 0 or url == '' then
+            vim.notify('No PR found for commit ' .. sha:sub(1, 7), vim.log.levels.WARN)
+            return
+          end
+          vim.fn.setreg('+', url)
+          vim.notify('Copied PR URL: ' .. url)
+        end,
+        desc = 'Copy PR URL for current line',
+      },
+    },
   },
   {
     'sindrets/diffview.nvim',
