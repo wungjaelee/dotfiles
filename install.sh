@@ -6,6 +6,13 @@ set -e
 DOTFILES_DIR="$(cd "$(dirname "$0")" && pwd)"
 OS="$(uname -s)"
 
+NO_INTERACTIVE=false
+for arg in "$@"; do
+  case "$arg" in
+    --no-interactive) NO_INTERACTIVE=true ;;
+  esac
+done
+
 # ── Colors ────────────────────────────────────────────────────────────────────
 
 RED='\033[0;31m'
@@ -48,7 +55,9 @@ echo ""
 echo "Conflicting dotfiles will be skipped with a warning — they won't block the rest."
 echo ""
 
-confirm "Proceed?" || { echo "Aborted."; exit 0; }
+if [[ "$NO_INTERACTIVE" != true ]]; then
+  confirm "Proceed?" || { echo "Aborted."; exit 0; }
+fi
 echo ""
 
 # ── Packages ──────────────────────────────────────────────────────────────────
