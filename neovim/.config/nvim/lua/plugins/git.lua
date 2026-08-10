@@ -40,7 +40,7 @@ return {
   },
   {
     'sindrets/diffview.nvim',
-    cmd = { 'DiffviewOpen', 'DiffviewClose' },
+    cmd = { 'DiffviewOpen', 'DiffviewClose', 'DiffviewFileHistory' },
     keys = {
       {
         '<leader>gv',
@@ -55,6 +55,12 @@ return {
           vim.cmd('DiffviewOpen ' .. merge_base)
         end,
         desc = 'Diffview vs tracking branch',
+      },
+      {
+        '<leader>gh',
+        ':DiffviewFileHistory<CR>',
+        mode = 'v',
+        desc = 'Git history for selected lines',
       },
     },
   },
