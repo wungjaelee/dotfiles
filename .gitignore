@@ -1,10 +1,9 @@
 .zsh/local.zsh
 lsp_local.lua
 
+*.log
+
 # herdr runtime files
-herdr/.config/herdr/herdr.log
-herdr/.config/herdr/herdr-client.log
-herdr/.config/herdr/herdr-server.log
 herdr/.config/herdr/session.json
 herdr/.config/herdr/release-notes.json
 herdr/.config/herdr/.plugins.lock
