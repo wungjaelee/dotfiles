@@ -53,7 +53,7 @@ return {
       })
     end,
     keys = {
-      { '<leader>gb', ':OpenCodeInBrowser<CR>', desc = 'Open current line in browser' },
+      { '<leader>o', ':OpenCodeInBrowser<CR>', desc = 'Open current line in browser' },
     },
   },
   {
