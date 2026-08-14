@@ -39,6 +39,24 @@ return {
     },
   },
   {
+    'rajneesh2k10/codebrowser.nvim',
+    cmd = { 'OpenCodeInBrowser' },
+    config = function()
+      require('codebrowser').setup({
+        urls = {
+          {
+            description = 'SourceGraph',
+            base_url = 'https://sg.uberinternal.com/r/code.uber.internal/uber-code/go-code/-/blob/',
+            line_number_anchor = '#L',
+          },
+        },
+      })
+    end,
+    keys = {
+      { '<leader>gb', ':OpenCodeInBrowser<CR>', desc = 'Open current line in browser' },
+    },
+  },
+  {
     'sindrets/diffview.nvim',
     cmd = { 'DiffviewOpen', 'DiffviewClose', 'DiffviewFileHistory' },
     keys = {
