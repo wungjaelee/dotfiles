@@ -12,6 +12,38 @@ return {
       zen = { enabled = true },
       indent = { enabled = true },
       quickfile = { enabled = true },
+      gitbrowse = {
+        enabled = true,
+        -- Snacks replaces (not merges) this whole list when overridden, so the full
+        -- upstream default set is duplicated here with one addition: Uber's gitolite
+        -- remotes look like `gitolite@host:repo`, which none of the built-in
+        -- `^git@...` patterns match (they require the literal prefix `git@`).
+        remote_patterns = {
+          { '^(https?://.*)%.git$', '%1' },
+          { '^git@(.+):(.+)%.git$', 'https://%1/%2' },
+          { '^git@(.+):(.+)$', 'https://%1/%2' },
+          { '^git@(.+)/(.+)$', 'https://%1/%2' },
+          { '^org%-%d+@(.+):(.+)%.git$', 'https://%1/%2' },
+          { '^ssh://git@(.*)$', 'https://%1' },
+          { '^ssh://([^:/]+)(:%d+)/(.*)$', 'https://%1/%3' },
+          { '^ssh://([^/]+)/(.*)$', 'https://%1/%2' },
+          { 'ssh%.dev%.azure%.com/v3/(.*)/(.*)$', 'dev.azure.com/%1/_git/%2' },
+          { '^https://%w*@(.*)', 'https://%1' },
+          { '^git@(.*)', 'https://%1' },
+          { ':%d+', '' },
+          { '%.git$', '' },
+          -- Uber's go-code gitolite remote -> its Sourcegraph browse URL
+          { '^gitolite@code%.uber%.internal:go%-code$', 'https://sg.uberinternal.com/r/code.uber.internal/uber-code/go-code' },
+        },
+        url_patterns = {
+          ['sg%.uberinternal%.com'] = {
+            branch = '/-/tree/{branch}',
+            file = '/-/blob/{branch}/{file}#L{line_start}',
+            permalink = '/-/blob/{commit}/{file}#L{line_start}',
+            commit = '/-/commit/{commit}',
+          },
+        },
+      },
       dashboard = {
         enabled = true,
         preset = {
@@ -39,6 +71,7 @@ return {
       -- bare Snacks.terminal() defaults to a bottom split; force float explicitly
       { '<leader>t', function() Snacks.terminal(nil, { win = { position = 'float' } }) end, desc = 'Toggle Floating Terminal' },
       { '<leader>z', function() Snacks.zen() end, desc = 'Toggle Zen Mode' },
+      { '<leader>o', function() Snacks.gitbrowse({ what = 'file' }) end, desc = 'Open current line in browser' },
     },
   },
 }
