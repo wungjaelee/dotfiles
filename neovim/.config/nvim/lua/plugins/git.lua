@@ -36,6 +36,16 @@ return {
         end,
         desc = 'Copy PR URL for current line',
       },
+      {
+        '<leader>gb',
+        function() require('gitsigns').blame_line({ full = true }) end,
+        desc = 'Blame current line (full)',
+      },
+      {
+        '<leader>gB',
+        function() require('gitsigns').blame() end,
+        desc = 'Blame buffer',
+      },
     },
   },
   {
