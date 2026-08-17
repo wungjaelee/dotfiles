@@ -14,6 +14,21 @@ return {
       quickfile = { enabled = true },
       gitbrowse = {
         enabled = true,
+        -- Fall back to copying the URL when there's no real browser to open it (e.g.
+        -- a devpod/container) - vim.ui.open()'s xdg-open exit code tells us it failed.
+        open = function(url)
+          local cmd, err = vim.ui.open(url)
+          if not cmd then
+            vim.fn.setreg('+', url)
+            vim.notify('No opener found (' .. err .. ') - copied URL to clipboard', vim.log.levels.WARN)
+            return
+          end
+          local result = cmd:wait()
+          if result.code ~= 0 then
+            vim.fn.setreg('+', url)
+            vim.notify('No browser available - copied URL to clipboard', vim.log.levels.WARN)
+          end
+        end,
         -- Snacks replaces (not merges) this whole list when overridden, so the full
         -- upstream default set is duplicated here with one addition: Uber's gitolite
         -- remotes look like `gitolite@host:repo`, which none of the built-in
