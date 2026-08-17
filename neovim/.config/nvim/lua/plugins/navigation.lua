@@ -10,6 +10,8 @@ return {
       bigfile = { enabled = true },
       terminal = { enabled = true },
       zen = { enabled = true },
+      indent = { enabled = true },
+      quickfile = { enabled = true },
       dashboard = {
         enabled = true,
         preset = {
