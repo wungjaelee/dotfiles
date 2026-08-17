@@ -9,6 +9,7 @@ return {
       input = { enabled = true },
       bigfile = { enabled = true },
       terminal = { enabled = true },
+      zen = { enabled = true },
       dashboard = {
         enabled = true,
         preset = {
@@ -35,6 +36,7 @@ return {
       { 'gd', function() Snacks.picker.lsp_definitions() end, desc = 'Goto Definition' },
       -- bare Snacks.terminal() defaults to a bottom split; force float explicitly
       { '<leader>t', function() Snacks.terminal(nil, { win = { position = 'float' } }) end, desc = 'Toggle Floating Terminal' },
+      { '<leader>z', function() Snacks.zen() end, desc = 'Toggle Zen Mode' },
     },
   },
 }
