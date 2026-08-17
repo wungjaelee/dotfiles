@@ -33,5 +33,5 @@ vim.keymap.set('n', '<Esc>', ':w<CR>', { desc = 'Save' })
 vim.cmd([[ xnoremap <expr> p 'pgv"'.v:register.'y' ]])
 
 -- replace word under cursor, or visual selection, everywhere in the file
-vim.keymap.set('n', '<leader>r', [[:%s/\<<C-r><C-w>\>//g<Left><Left>]], { desc = 'Replace word under cursor' })
-vim.keymap.set('v', '<leader>r', [["hy:%s/\V<C-r>=escape(@h, '/\')<CR>//g<Left><Left>]], { desc = 'Replace selection' })
+vim.keymap.set('n', '<leader>R', [[:%s/\<<C-r><C-w>\>//g<Left><Left>]], { desc = 'Replace word under cursor' })
+vim.keymap.set('v', '<leader>R', [["hy:%s/\V<C-r>=escape(@h, '/\')<CR>//g<Left><Left>]], { desc = 'Replace selection' })
