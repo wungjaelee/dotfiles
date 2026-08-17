@@ -53,8 +53,9 @@ return {
         url_patterns = {
           ['sg%.uberinternal%.com'] = {
             branch = '/-/tree/{branch}',
-            file = '/-/blob/{branch}/{file}#L{line_start}',
-            permalink = '/-/blob/{commit}/{file}#L{line_start}',
+            -- No branch segment: Sourcegraph resolves the default branch/HEAD without one.
+            file = '/-/blob/{file}#L{line_start}-{line_end}',
+            permalink = '/-/blob/{commit}/{file}#L{line_start}-{line_end}',
             commit = '/-/commit/{commit}',
           },
         },
@@ -86,7 +87,7 @@ return {
       -- bare Snacks.terminal() defaults to a bottom split; force float explicitly
       { '<leader>t', function() Snacks.terminal(nil, { win = { position = 'float' } }) end, desc = 'Toggle Floating Terminal' },
       { '<leader>z', function() Snacks.zen() end, desc = 'Toggle Zen Mode' },
-      { '<leader>o', function() Snacks.gitbrowse({ what = 'file' }) end, desc = 'Open current line in browser' },
+      { '<leader>go', function() Snacks.gitbrowse({ what = 'file' }) end, mode = { 'n', 'v' }, desc = 'Open current line/selection in browser' },
     },
   },
 }
