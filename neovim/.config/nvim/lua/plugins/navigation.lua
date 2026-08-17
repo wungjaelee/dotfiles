@@ -9,6 +9,23 @@ return {
       input = { enabled = true },
       bigfile = { enabled = true },
       terminal = { enabled = true },
+      dashboard = {
+        enabled = true,
+        preset = {
+          keys = {
+            { icon = ' ', key = 'f', desc = 'Find File', action = function() Snacks.picker.files({ hidden = true }) end },
+            { icon = ' ', key = 'r', desc = 'Recent Files', action = function() Snacks.picker.recent() end },
+            { icon = ' ', key = 's', desc = 'Search Text', action = function() Snacks.picker.grep({ hidden = true }) end },
+            { icon = ' ', key = 'q', desc = 'Quit', action = ':qa' },
+          },
+        },
+        sections = {
+          { section = 'header' },
+          { section = 'keys', gap = 1, padding = 1 },
+          { section = 'recent_files', limit = 8, padding = 1 },
+          { section = 'startup' },
+        },
+      },
     },
     keys = {
       { '<leader>f', function() Snacks.picker.files({ hidden = true }) end, desc = 'Find Files' },
