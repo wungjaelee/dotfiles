@@ -8,3 +8,4 @@ o.ignorecase = true            -- search is case-insensitive by default
 o.smartcase = true             -- case-sensitive only if i type a capital
 o.scrolloff = 16               -- keep cursor away from the screen edge
 o.undofile = true              -- persistent undo across sessions
+o.colorcolumn = '100'          -- vertical line marking the line-length limit
