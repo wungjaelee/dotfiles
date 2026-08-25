@@ -24,4 +24,9 @@ return {
       vim.api.nvim_set_hl(0, 'SnacksPickerDir', { fg = palette.subtle })
     end,
   },
+  {
+    'folke/tokyonight.nvim',
+    lazy = false,
+    priority = 1000,
+  },
 }
