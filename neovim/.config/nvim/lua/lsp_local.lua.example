@@ -36,13 +36,31 @@
 -- })
 -- vim.lsp.enable('gopls')
 --
--- -- ulsp-daemon: format on save, BUILD file updates, Bazel auto-resolve, mock gen.
--- -- Separate from gopls, which still handles completion/hover/diagnostics.
--- -- Connects over TCP via socat (needs `socat` installed); daemon listens on 27883.
+-- -- ulsp-daemon: format on save, BUILD file updates, Bazel auto-resolve, mock gen,
+-- -- and (for the Java monorepo) go-to-definition — VS Code's Java support runs on
+-- -- this same daemon via its uberLanguageServer extension, not jdtls.
+-- -- Separate from gopls, which still handles Go completion/hover/diagnostics.
+-- --
+-- -- The daemon is started by `uexec` from within a monorepo (e.g.
+-- -- go-code/tools/ide/ulsp-daemon or fievel/tools/ide/ulsp/ulsp-daemon) — check
+-- -- `ps aux | grep ulsp-daemon` and `cat ~/.ulspd` to confirm it's running and
+-- -- to see the live lsp-address port (defaults to 27883, but verify).
+-- -- Connects over TCP via socat (needs `socat` installed).
+-- --
+-- -- root_markers = {'.git'} lets one client config serve whichever monorepo
+-- -- (go-code, fievel, ...) the current buffer lives in, instead of hardcoding
+-- -- a single root_dir.
+-- --
+-- -- For Java in fievel, go-to-definition only works for targets with a synced
+-- -- SCIP index (fievel/.scip/). Sync one with:
+-- --   DEBUG=true ./tools/scip/scip_sync.sh //your/target:name
+-- -- (the plain `./tools/scip/scip_sync.sh` fast path — uexec's scip-sync binary
+-- -- — silently no-ops with "Found no targets to sync" on this setup; DEBUG=true
+-- -- runs the underlying bazel query/build directly and works)
 -- vim.lsp.config('ulsp', {
 --   cmd = { 'socat', '-', 'tcp:localhost:27883,ignoreeof' },
---   filetypes = { 'go', 'java' },
---   root_dir = '/home/user/go-code',
+--   filetypes = { 'go', 'java', 'starlark', 'scala' },
+--   root_markers = { '.git' },
 -- })
 -- vim.lsp.enable('ulsp')
 --
@@ -54,3 +72,10 @@
 
 -- Example: a plain LSP server with no machine-specific wiring
 -- vim.lsp.enable('lua_ls')
+
+-- Python — pyright, installed via Brewfile/Aptfile+install.sh. No
+-- machine-specific wiring needed; nvim-lspconfig's default config is enough.
+-- In the Java monorepo (fievel), run tools/ide/pyright_lsp/sync.sh once (and
+-- after pulling significant changes) — it generates the import-resolution
+-- index pyright needs to follow imports across Bazel-managed Python packages.
+-- vim.lsp.enable('pyright')

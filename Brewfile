@@ -28,6 +28,9 @@ cask "font-hack-nerd-font"
 # File manager
 brew "yazi"
 
+# Language servers (neovim LSP)
+brew "pyright"  # Python
+
 # Essential CLI tools
 brew "fzf"        # fuzzy finder — Ctrl+R history, Ctrl+T file picker
 brew "pet"        # snippet manager — Ctrl+S to search/insert saved commands

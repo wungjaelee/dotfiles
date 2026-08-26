@@ -147,7 +147,20 @@ elif [[ "$OS" == "Linux" ]]; then
   else
     print_step "neovim already installed, skipping."
   fi
+
+  # pyright — Python language server, not in apt, installed via npm
+  if ! command -v pyright &>/dev/null; then
+    print_step "Installing pyright..."
+    sudo npm install -g pyright
+  else
+    print_step "pyright already installed, skipping."
+  fi
 fi
+
+# Note: no generic Java LSP install here — on Uber devboxes, Java (and Go)
+# go-to-definition is served by ulsp-daemon, a uexec-launched binary already
+# bundled in the monorepo (e.g. fievel/tools/ide/ulsp/ulsp-daemon). See
+# lsp_local.lua.example for how to wire neovim to it.
 
 # ── Stow ──────────────────────────────────────────────────────────────────────
 
