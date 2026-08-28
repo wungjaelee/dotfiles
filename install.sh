@@ -109,6 +109,19 @@ elif [[ "$OS" == "Linux" ]]; then
     print_step "herdr already installed, skipping."
   fi
 
+  # pet — not in apt, and release assets embed the version in the filename,
+  # so resolve the latest tag via the GitHub API first.
+  if ! command -v pet &>/dev/null; then
+    print_step "Installing pet..."
+    pet_version=$(curl -fsSL https://api.github.com/repos/knqyf263/pet/releases/latest | grep '"tag_name"' | cut -d'"' -f4)
+    curl -LO "https://github.com/knqyf263/pet/releases/download/${pet_version}/pet_${pet_version#v}_linux_amd64.tar.gz"
+    tar xzf "pet_${pet_version#v}_linux_amd64.tar.gz" pet
+    sudo mv pet /usr/local/bin/pet
+    rm "pet_${pet_version#v}_linux_amd64.tar.gz"
+  else
+    print_step "pet already installed, skipping."
+  fi
+
   # yazi — not in apt, use latest binary from GitHub. musl build avoids
   # GLIBC version mismatches on older distros (e.g. Debian stable's glibc
   # trails the gnu build's requirement).
@@ -167,6 +180,26 @@ for pkg in */; do
     echo "$stow_output" | sed 's/^/      /'
   }
 done
+
+# ── Pet config ────────────────────────────────────────────────────────────────
+# Generated rather than stowed: pet's snippetfile setting must be a literal,
+# already-resolved absolute path (it doesn't expand ~ or $HOME), so a single
+# committed config.toml can't work across machines with different $HOME.
+
+if [[ ! -f "$HOME/.config/pet/config.toml" ]]; then
+  print_step "Writing pet config..."
+  mkdir -p "$HOME/.config/pet"
+  cat > "$HOME/.config/pet/config.toml" <<EOF
+[General]
+  editor      = "nvim"
+  column      = 40
+  selectcmd   = "fzf"
+  snippetfile = "$HOME/.config/pet/snippet.toml"
+EOF
+  touch "$HOME/.config/pet/snippet.toml"  # pet errors instead of creating this itself
+else
+  print_step "pet config already exists, skipping."
+fi
 
 # ── Agent memory ──────────────────────────────────────────────────────────────
 

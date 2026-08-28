@@ -17,6 +17,15 @@ eval "$(starship init zsh)"
 # keybindings
 bindkey '^f' autosuggest-accept
 
+function pet-select() {
+  BUFFER=$(pet search --query "$LBUFFER")
+  CURSOR=$#BUFFER
+  zle redisplay
+}
+zle -N pet-select
+stty -ixon
+bindkey '^s' pet-select
+
 # exports
 export EDITOR="nvim"
 export PATH="$HOME/.local/bin:$PATH"
