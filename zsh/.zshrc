@@ -15,6 +15,18 @@ fi
 eval "$(starship init zsh)"
 
 # keybindings
+bindkey -e    # force emacs keymap — must come before any other bindkey calls, since it resets bindings
+stty -ixon    # disable terminal flow control so ^Q/^S below reach zsh instead of pausing/resuming output
+
+# emacs keymap defaults worth knowing (already bound, no need to redeclare):
+#   ^A / ^E         beginning / end of line        ^K      kill to end of line
+#   ^B / ^F         back / forward one char        ^U      kill whole line
+#   ^D              delete char (or list-exit)     ^W      delete word back
+#   ^Y              yank (paste) last kill         ^R      incremental history search (fzf overrides this above)
+#   Alt-B / Alt-F   back / forward one word        Alt-D   delete word forward
+
+bindkey '^q' beginning-of-line  # ^A is herdr's prefix key and never reaches zsh inside herdr, so use ^Q
+                                # instead (this shadows zsh's rarely-used default ^Q binding, push-line)
 bindkey '^f' autosuggest-accept
 
 function pet-select() {
@@ -23,7 +35,6 @@ function pet-select() {
   zle redisplay
 }
 zle -N pet-select
-stty -ixon
 bindkey '^s' pet-select
 
 # exports
