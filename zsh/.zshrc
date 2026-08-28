@@ -14,6 +14,23 @@ else
 fi
 eval "$(starship init zsh)"
 
+# starship: git_status's dirty-file scan can be too slow in large repos —
+# swap to a lighter config (git_status disabled) while inside any path listed
+# in $_starship_monorepo_paths. Which paths count as "large" is machine/work-
+# specific, so that array is set (if at all) in ~/.zsh/local.zsh, not here.
+_starship_check_monorepo() {
+  local dir="$PWD" p
+  for p in $_starship_monorepo_paths; do
+    if [[ "$dir" == "$p" || "$dir" == "$p"/* ]]; then
+      export STARSHIP_CONFIG="$HOME/.config/starship-monorepo.toml"
+      return
+    fi
+  done
+  unset STARSHIP_CONFIG
+}
+autoload -Uz add-zsh-hook
+add-zsh-hook chpwd _starship_check_monorepo
+
 # keybindings
 bindkey -e    # force emacs keymap — must come before any other bindkey calls, since it resets bindings
 stty -ixon    # disable terminal flow control so ^Q/^S below reach zsh instead of pausing/resuming output
