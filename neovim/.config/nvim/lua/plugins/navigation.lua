@@ -49,6 +49,9 @@ return {
           { '%.git$', '' },
           -- Uber's go-code gitolite remote -> its Sourcegraph browse URL
           { '^gitolite@code%.uber%.internal:go%-code$', 'https://sg.uberinternal.com/r/code.uber.internal/uber-code/go-code' },
+          -- fievel is a standalone gitolite checkout that mirrors a subtree of the
+          -- java-code monorepo at matching relative paths -> browse it there instead
+          { '^gitolite@code%.uber%.internal:lm/fievel$', 'https://sg.uberinternal.com/r/code.uber.internal/uber-code/java-code' },
         },
         url_patterns = {
           ['sg%.uberinternal%.com'] = {
