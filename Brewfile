@@ -43,3 +43,4 @@ brew "ffmpeg"     # yazi: video preview
 brew "sevenzip"   # yazi: archive preview
 brew "poppler"    # yazi: PDF preview
 brew "imagemagick" # yazi: image preview
+brew "librsvg"     # yazi: SVG preview

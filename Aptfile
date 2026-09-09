@@ -14,5 +14,6 @@ poppler-utils
 zoxide
 socat
 imagemagick
+librsvg2-bin
 nodejs
 npm
