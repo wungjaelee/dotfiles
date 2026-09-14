@@ -109,6 +109,16 @@ elif [[ "$OS" == "Linux" ]]; then
     print_step "herdr already installed, skipping."
   fi
 
+  # Without this hook, herdr can't tell which Claude Code session was
+  # running in a pane, so restoring a workspace after a reboot relaunches a
+  # bare shell instead of resuming the prior conversation.
+  if command -v herdr &>/dev/null && ! herdr integration status 2>/dev/null | grep -q "^claude: current\|^claude: installed"; then
+    print_step "Installing herdr Claude Code integration..."
+    herdr integration install claude
+  else
+    print_step "herdr Claude Code integration already installed, skipping."
+  fi
+
   # pet — not in apt, and release assets embed the version in the filename,
   # so resolve the latest tag via the GitHub API first.
   if ! command -v pet &>/dev/null; then
