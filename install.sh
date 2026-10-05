@@ -165,6 +165,25 @@ elif [[ "$OS" == "Linux" ]]; then
   else
     print_step "pyright already installed, skipping."
   fi
+
+  # google-chrome — not in Debian's apt repos; install Google's .deb (x86_64
+  # only). The package registers Google's apt repo, so apt keeps it updated.
+  # A failure here must not abort the rest of the install (set -e is on).
+  if ! command -v google-chrome &>/dev/null; then
+    if [[ "$(dpkg --print-architecture)" != "amd64" ]]; then
+      print_warn "google-chrome: only amd64 is supported, skipping."
+    else
+      print_step "Installing google-chrome..."
+      chrome_deb="$(mktemp --suffix=.deb)"
+      if ! { curl -fsSL -o "$chrome_deb" https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb \
+             && sudo apt-get install -y "$chrome_deb"; }; then
+        print_warn "google-chrome install failed, continuing."
+      fi
+      rm -f "$chrome_deb"
+    fi
+  else
+    print_step "google-chrome already installed, skipping."
+  fi
 fi
 
 # Note: no generic Java LSP install here — on Uber devboxes, Java (and Go)
