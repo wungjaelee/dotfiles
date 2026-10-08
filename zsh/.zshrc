@@ -54,6 +54,11 @@ function pet-select() {
 zle -N pet-select
 bindkey '^s' pet-select
 
+function prev() {
+  PREV=$(fc -lrn | head -n 1)
+  sh -c "pet new `printf %q "$PREV"`"
+}
+
 # exports
 export EDITOR="nvim"
 export PATH="$HOME/.local/bin:$PATH"
