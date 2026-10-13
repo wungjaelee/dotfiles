@@ -52,6 +52,9 @@ return {
           -- fievel is a standalone gitolite checkout that mirrors a subtree of the
           -- java-code monorepo at matching relative paths -> browse it there instead
           { '^gitolite@code%.uber%.internal:lm/fievel$', 'https://sg.uberinternal.com/r/code.uber.internal/uber-code/java-code' },
+          -- objectconfig repos are checked out per-branch as `objectconfig/<repo>@<branch>`;
+          -- Sourcegraph addresses that as `uber-objectconfig/<repo>---<branch>`
+          { '^gitolite@code%.uber%.internal:objectconfig/([^@]+)@(.+)$', 'https://sg.uberinternal.com/r/code.uber.internal/uber-objectconfig/%1---%2' },
         },
         url_patterns = {
           ['sg%.uberinternal%.com'] = {
