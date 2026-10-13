@@ -158,10 +158,11 @@ elif [[ "$OS" == "Linux" ]]; then
     print_step "neovim already installed, skipping."
   fi
 
-  # pyright — Python language server, not in apt, installed via npm
+  # pyright — Python language server, not in apt, installed via npm. sudo makes npm
+  # read /root/.npmrc, so pass ours for the Uber registry auth; non-fatal (set -e).
   if ! command -v pyright &>/dev/null; then
     print_step "Installing pyright..."
-    sudo npm install -g pyright
+    sudo npm install -g --userconfig "$HOME/.npmrc" pyright || print_warn "pyright install failed, skipping."
   else
     print_step "pyright already installed, skipping."
   fi
