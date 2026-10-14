@@ -11,6 +11,7 @@ brew "neovim"
 # Git
 brew "gh"
 brew "git"
+brew "git-branchless"  # required by spr; on Linux install.sh fetches it via tb-cli
 
 # Prompt
 brew "starship"

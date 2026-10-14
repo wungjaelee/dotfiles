@@ -187,6 +187,40 @@ elif [[ "$OS" == "Linux" ]]; then
   fi
 fi
 
+# ── Uber tools (spr, git-branchless) ──────────────────────────────────────────
+# Fetched from Terrablob, so only on machines with tb-cli. Failures are non-fatal.
+
+if command -v tb-cli &>/dev/null; then
+  mkdir -p "$HOME/bin"
+
+  # spr is a small uexec stub that resolves the real binary per platform, and
+  # auto_release always points at the latest version, so refresh it every run.
+  print_step "Installing spr..."
+  if tb-cli get /prod/go_framework/auto_release/spr "$HOME/bin/spr" && chmod +x "$HOME/bin/spr"; then
+    :
+  else
+    print_warn "spr install failed, skipping."
+  fi
+
+  # spr needs git-branchless (or Sapling) in the repo. macOS gets it from the
+  # Brewfile; on Linux use a precompiled build. `git branchless init` is per-repo
+  # and is not done here.
+  if [[ "$OS" != "Darwin" ]]; then
+    if ! command -v git-branchless &>/dev/null; then
+      print_step "Installing git-branchless..."
+      if tb-cli get /prod/personal/saulg/branchless "$HOME/bin/git-branchless" && chmod +x "$HOME/bin/git-branchless"; then
+        :
+      else
+        print_warn "git-branchless install failed, skipping."
+      fi
+    else
+      print_step "git-branchless already installed, skipping."
+    fi
+  fi
+else
+  print_step "tb-cli not found, skipping spr/git-branchless."
+fi
+
 # Note: no generic Java LSP install here — on Uber devboxes, Java (and Go)
 # go-to-definition is served by ulsp-daemon, a uexec-launched binary already
 # bundled in the monorepo (e.g. fievel/tools/ide/ulsp/ulsp-daemon). See
