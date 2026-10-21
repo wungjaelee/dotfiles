@@ -114,7 +114,8 @@ elif [[ "$OS" == "Linux" ]]; then
   # bare shell instead of resuming the prior conversation.
   if command -v herdr &>/dev/null && ! herdr integration status 2>/dev/null | grep -q "^claude: current\|^claude: installed"; then
     print_step "Installing herdr Claude Code integration..."
-    herdr integration install claude
+    # Non-fatal (set -e): fails if Claude Code isn't installed yet.
+    herdr integration install claude || print_warn "herdr Claude Code integration failed (is Claude Code installed?); skipping"
   else
     print_step "herdr Claude Code integration already installed, skipping."
   fi
