@@ -249,6 +249,14 @@ ln -sfn "$DOTFILES_DIR" "$HOME/.dotfiles"
 print_step "Symlinking dotfiles..."
 cd "$DOTFILES_DIR"
 
+# herdr writes a stub config.toml on first launch, which makes stow conflict.
+# Move any real (non-symlink) file aside so the repo config can take its place.
+herdr_conf="$HOME/.config/herdr/config.toml"
+if [[ -f "$herdr_conf" && ! -L "$herdr_conf" ]]; then
+  print_warn "Backing up existing herdr config to ${herdr_conf}.bak"
+  mv "$herdr_conf" "${herdr_conf}.bak"
+fi
+
 for pkg in */; do
   pkg="${pkg%/}"
   [[ "$pkg" == "agents" ]] && continue
