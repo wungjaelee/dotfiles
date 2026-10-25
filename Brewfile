@@ -23,9 +23,6 @@ brew "zsh-syntax-highlighting"
 # Terminal
 cask "wezterm"
 
-# Browser
-cask "google-chrome"
-
 # Fonts
 cask "font-hack-nerd-font"
 
