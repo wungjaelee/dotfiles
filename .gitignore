@@ -7,3 +7,5 @@ lsp_local.lua
 herdr/.config/herdr/session.json
 herdr/.config/herdr/release-notes.json
 herdr/.config/herdr/.plugins.lock
+herdr/.config/herdr/herdr.sock.agent
+herdr/.config/herdr/session-snapshots/
