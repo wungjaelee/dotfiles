@@ -87,6 +87,8 @@ return {
     keys = {
       { '<leader>f', function() Snacks.picker.files({ hidden = true }) end, desc = 'Find Files' },
       { '<leader>s', function() Snacks.picker.grep({ hidden = true }) end,  desc = 'Search Text' },
+      -- grep limited to the directory of the file in the current buffer (recursive)
+      { '<leader>S', function() Snacks.picker.grep({ hidden = true, dirs = { vim.fn.expand('%:p:h') } }) end, desc = 'Search Text (current file dir)' },
       { '<leader>b', function() Snacks.picker.buffers() end, desc = 'Buffers' },
       { '<leader>r', function() Snacks.picker.recent() end, desc = 'Recent Files' },
       { '<leader>l', function() Snacks.picker.lines() end, desc = 'Search Lines' },
