@@ -252,8 +252,10 @@ cd "$DOTFILES_DIR"
 
 # herdr writes a stub config.toml on first launch, which makes stow conflict.
 # Move any real (non-symlink) file aside so the repo config can take its place.
+# Skip when it already resolves into the repo (~/.config/herdr is a stow symlink to it):
+# that file is our tracked config, and moving it would wipe the config on every restart.
 herdr_conf="$HOME/.config/herdr/config.toml"
-if [[ -f "$herdr_conf" && ! -L "$herdr_conf" ]]; then
+if [[ -f "$herdr_conf" && ! -L "$herdr_conf" && "$(readlink -f "$herdr_conf")" != "$DOTFILES_DIR/"* ]]; then
   print_warn "Backing up existing herdr config to ${herdr_conf}.bak"
   mv "$herdr_conf" "${herdr_conf}.bak"
 fi
