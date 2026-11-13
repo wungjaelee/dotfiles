@@ -10,6 +10,18 @@ vim.keymap.set('n', '<leader>x', '<cmd>split<cr><C-w>j', { desc = 'Horizontal sp
 vim.keymap.set('n', '<leader>q', '<cmd>q<cr>', { desc = 'Close pane' })
 vim.keymap.set('n', '<leader>w', '<cmd>bd<cr>', { desc = 'Close buffer' })
 
+-- make all splits equal size (floats and fixed-width panels like diffview's file list are left alone)
+vim.keymap.set('n', '<leader>=', '<C-w>=', { desc = 'Equalize split sizes' })
+
+-- re-equalize splits whenever the terminal is resized (e.g. herdr zoom/unzoom), in every tab
+vim.api.nvim_create_autocmd('VimResized', {
+  callback = function()
+    local tab = vim.fn.tabpagenr()
+    vim.cmd('tabdo wincmd =')
+    vim.cmd('tabnext ' .. tab)
+  end,
+})
+
 -- exit terminal mode
 vim.keymap.set('t', '<Esc>', '<C-\\><C-n>', { desc = 'Exit terminal mode' })
 

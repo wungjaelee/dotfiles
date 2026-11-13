@@ -57,14 +57,19 @@ return {
         function()
           -- A...B rev-ranges pin both sides to read-only git blobs, so diff against
           -- the merge-base as a single rev instead - that keeps the working tree side editable.
-          local merge_base = vim.fn.systemlist({ 'git', 'merge-base', '@{upstream}', 'HEAD' })[1]
-          if vim.v.shell_error ~= 0 or not merge_base then
-            vim.notify('No tracking branch configured for this branch', vim.log.levels.ERROR)
-            return
+          -- Always compare against main (like the `gd` zsh function), falling back to
+          -- master for repos that still use it. Doesn't depend on a tracking branch.
+          for _, base in ipairs({ 'main', 'master' }) do
+            local merge_base = vim.fn.systemlist({ 'git', 'merge-base', base, 'HEAD' })[1]
+            if vim.v.shell_error == 0 and merge_base and merge_base ~= '' then
+              -- -uno: skip the untracked-files scan, which takes minutes in the monorepo.
+              vim.cmd('DiffviewOpen ' .. merge_base .. ' --untracked-files=no')
+              return
+            end
           end
-          vim.cmd('DiffviewOpen ' .. merge_base)
+          vim.notify('Neither main nor master found to compare against', vim.log.levels.ERROR)
         end,
-        desc = 'Diffview vs tracking branch',
+        desc = 'Diffview vs main',
       },
       {
         '<leader>gh',

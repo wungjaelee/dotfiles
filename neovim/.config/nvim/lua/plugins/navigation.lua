@@ -95,7 +95,9 @@ return {
       { 'gd', function() Snacks.picker.lsp_definitions() end, desc = 'Goto Definition' },
       -- bare Snacks.terminal() defaults to a bottom split; force float explicitly
       { '<leader>t', function() Snacks.terminal(nil, { win = { position = 'float' } }) end, desc = 'Toggle Floating Terminal' },
-      { '<leader>z', function() Snacks.zen() end, desc = 'Toggle Zen Mode' },
+      -- maximize the current window over the whole editor (e.g. one pane of a diff); press again to restore
+      { '<leader>z', function() Snacks.zen.zoom() end, desc = 'Toggle zoom (maximize window)' },
+      { '<leader>Z', function() Snacks.zen() end, desc = 'Toggle Zen Mode' },
       { '<leader>go', function() Snacks.gitbrowse({ what = 'file' }) end, mode = { 'n', 'v' }, desc = 'Open current line/selection in browser' },
     },
   },
